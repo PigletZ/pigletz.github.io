@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://pigletz.github.io/sitemap.xml

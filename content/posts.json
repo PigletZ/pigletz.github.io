@@ -1,0 +1,69 @@
+[
+  {
+    "title": "ceph修改public_network",
+    "date": "2020-11-26",
+    "category": "ceph",
+    "tags": [
+      "mon"
+    ],
+    "url": "/2020/11/26/ceph修改public_network/",
+    "summary": "通过 monmap 调整 Ceph public_network，记录 Monitor 网络变更流程。",
+    "file": "posts/ceph修改public_network.html"
+  },
+  {
+    "title": "ceph缓存分层",
+    "date": "2020-09-11",
+    "category": "ceph",
+    "tags": [
+      "ceph"
+    ],
+    "url": "/2020/09/11/ceph缓存分层/",
+    "summary": "Ceph 缓存分层笔记：writeback 模式、缓存池配置与数据迁移。",
+    "file": "posts/ceph缓存分层.html"
+  },
+  {
+    "title": "Kdump、watchdog、BMC配置",
+    "date": "2020-04-05",
+    "category": "linux",
+    "tags": [
+      "linux"
+    ],
+    "url": "/2020/04/05/Kdump、watchdog、BMC配置/",
+    "summary": "Linux 故障诊断笔记：Kdump 崩溃转储、watchdog 与 BMC 配置。",
+    "file": "posts/Kdump、watchdog、BMC配置.html"
+  },
+  {
+    "title": "存储策略部署文档",
+    "date": "2020-03-17",
+    "category": "ceph",
+    "tags": [
+      "ceph"
+    ],
+    "url": "/2020/03/17/存储策略部署/",
+    "summary": "从 CRUSH Map 到存储池，梳理 Ceph 数据分布与存储策略的部署。",
+    "file": "posts/存储策略部署.html"
+  },
+  {
+    "title": "Hello World",
+    "date": "2020-03-12",
+    "category": "ceph",
+    "tags": [
+      "ceph",
+      "linux"
+    ],
+    "url": "/2020/03/12/hello-world/",
+    "summary": "博客的起点：记录 Hexo 的创建、运行与部署流程。",
+    "file": "posts/hello-world.html"
+  },
+  {
+    "title": "对象文件查询接口",
+    "date": "2020-03-12",
+    "category": "interface",
+    "tags": [
+      "interface"
+    ],
+    "url": "/2020/03/12/文件查询API接口/",
+    "summary": "对象存储文件查询 API：请求参数、对象位置与返回结果示例。",
+    "file": "posts/文件查询API接口.html"
+  }
+]

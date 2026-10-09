@@ -1,123 +1,225 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-
-  
-  <title>存储策略部署文档 | Cepher Piglet</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="部署Cluster Map map的系统层级(树形结构，从root开始) 1 2 3 4 5 6 7 8 9 10 11 12   # types type 0 osd type 1 host type 2 chassis type 3 rack type 4 row type 5 pdu type 6 pod type 7 room type 8 datacenter type 9 region">
-<meta property="og:type" content="article">
-<meta property="og:title" content="存储策略部署文档">
-<meta property="og:url" content="https://github.com/PigletZ/2020/03/17/%E5%AD%98%E5%82%A8%E7%AD%96%E7%95%A5%E9%83%A8%E7%BD%B2/index.html">
-<meta property="og:site_name" content="Cepher Piglet">
-<meta property="og:description" content="部署Cluster Map map的系统层级(树形结构，从root开始) 1 2 3 4 5 6 7 8 9 10 11 12   # types type 0 osd type 1 host type 2 chassis type 3 rack type 4 row type 5 pdu type 6 pod type 7 room type 8 datacenter type 9 region">
-<meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-03-17T07:29:23.366Z">
-<meta property="article:modified_time" content="2020-03-17T07:48:52.767Z">
-<meta property="article:author" content="JH Zeng">
-<meta property="article:tag" content="ceph">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Cepher Piglet" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  
-<link rel="stylesheet" href="/css/style.css">
-
-<meta name="generator" content="Hexo 4.2.0"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Cepher Piglet</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">分布式存储的一只小猪</a>
-        </h2>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://github.com/PigletZ"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-存储策略部署" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/17/%E5%AD%98%E5%82%A8%E7%AD%96%E7%95%A5%E9%83%A8%E7%BD%B2/" class="article-date">
-  <time datetime="2020-03-17T07:29:23.366Z" itemprop="datePublished">2020-03-17</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ceph/">ceph</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      存储策略部署文档
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="部署Cluster-Map"><a href="#部署Cluster-Map" class="headerlink" title="部署Cluster Map"></a>部署Cluster Map</h3><h4 id="map的系统层级-树形结构，从root开始"><a href="#map的系统层级-树形结构，从root开始" class="headerlink" title="map的系统层级(树形结构，从root开始)"></a>map的系统层级(树形结构，从root开始)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># types</span><br><span class="line">type 0 osd</span><br><span class="line">type 1 host</span><br><span class="line">type 2 chassis</span><br><span class="line">type 3 rack</span><br><span class="line">type 4 row</span><br><span class="line">type 5 pdu</span><br><span class="line">type 6 pod</span><br><span class="line">type 7 room</span><br><span class="line">type 8 datacenter</span><br><span class="line">type 9 region</span><br><span class="line">type 10 root</span><br></pre></td></tr></table></figure>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>存储策略部署文档 · Cepher Piglet</title><meta name="description" content="从 CRUSH Map 到存储池，梳理 Ceph 数据分布与存储策略的部署。"><link rel="canonical" href="https://pigletz.github.io/2020/03/17/%E5%AD%98%E5%82%A8%E7%AD%96%E7%95%A5%E9%83%A8%E7%BD%B2/"><meta property="og:type" content="article"><meta property="og:title" content="存储策略部署文档"><meta property="og:description" content="从 CRUSH Map 到存储池，梳理 Ceph 数据分布与存储策略的部署。"><meta property="og:url" content="https://pigletz.github.io/2020/03/17/%E5%AD%98%E5%82%A8%E7%AD%96%E7%95%A5%E9%83%A8%E7%BD%B2/"><meta property="og:site_name" content="Cepher Piglet"><meta property="og:locale" content="zh_CN"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="alternate" href="/atom.xml" type="application/atom+xml" title="Cepher Piglet RSS"><script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/site.js"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"存储策略部署文档","datePublished":"2020-03-17","author":{"@type":"Person","name":"JH Zeng"},"url":"https://pigletz.github.io/2020/03/17/%E5%AD%98%E5%82%A8%E7%AD%96%E7%95%A5%E9%83%A8%E7%BD%B2/"}</script></head><body><a class="skip" href="#main">跳到正文</a><header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-icon"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M10 14 8 5l10 6m12 3 2-9-10 6" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><rect x="5" y="10" width="30" height="25" rx="12" fill="currentColor"/><ellipse cx="20" cy="25" rx="8" ry="5" fill="var(--bg)"/><path d="M17 24v2m6-2v2" stroke="currentColor" stroke-width="2"/><circle cx="13" cy="18" r="1.5" fill="var(--bg)"/><circle cx="27" cy="18" r="1.5" fill="var(--bg)"/></svg></span><span>Cepher Piglet<span class="brand-sub">ENGINEERING NOTES</span></span></a><nav aria-label="主导航"><a href="/">首页</a><a href="/archives/">归档</a><a href="/about/">关于</a></nav><div class="header-actions"><a class="search-link" href="/search/" aria-label="搜索文章"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><span>搜索</span><kbd>/</kbd></a><button class="icon-button" id="theme-toggle" aria-label="切换深浅主题"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/></svg></button></div></div></header><main id="main" class="shell"><div class="breadcrumb"><a href="/">首页</a><span>/</span><a href="/categories/ceph/">Ceph · 分布式存储</a></div><header class="article-head"><div class="post-meta"><span class="category">CEPH</span><time datetime="2020-03-17">2020.03.17</time><span>15 分钟阅读</span></div><h1>存储策略部署文档</h1><p>从 CRUSH Map 到存储池，梳理 Ceph 数据分布与存储策略的部署。</p><div class="article-author"><span class="small-avatar">P</span> JH Zeng <span>·</span> <a href="/tags/ceph/">#ceph</a></div></header><div class="article-layout"><article class="prose"><p class="historical-note">发表于 2020-03-17 · 本文保留当年的技术记录，使用前请结合当前版本文档核对。</p><h3 id="部署Cluster-Map"><a href="#部署Cluster-Map" class="headerlink" title="部署Cluster Map"></a>部署Cluster Map</h3><h4 id="map的系统层级-树形结构，从root开始"><a href="#map的系统层级-树形结构，从root开始" class="headerlink" title="map的系统层级(树形结构，从root开始)"></a>map的系统层级(树形结构，从root开始)</h4><div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line"># types</span>
+<span class="line">type 0 osd</span>
+<span class="line">type 1 host</span>
+<span class="line">type 2 chassis</span>
+<span class="line">type 3 rack</span>
+<span class="line">type 4 row</span>
+<span class="line">type 5 pdu</span>
+<span class="line">type 6 pod</span>
+<span class="line">type 7 room</span>
+<span class="line">type 8 datacenter</span>
+<span class="line">type 9 region</span>
+<span class="line">type 10 root</span>
+</code></pre></div>
 
 <p>树形结构(例如room)：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">rule-----root_rule</span><br><span class="line">			|------room1</span><br><span class="line">			|       |----rack01</span><br><span class="line">			|		|		|-----host01</span><br><span class="line">			|		|				|-----osd.1</span><br><span class="line">			|		|				|-----osd.2</span><br><span class="line">			|		|</span><br><span class="line">			|		|-----rack02</span><br><span class="line">			|</span><br><span class="line">			|</span><br><span class="line">			|------room2</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">rule-----root_rule</span>
+<span class="line">			|------room1</span>
+<span class="line">			|       |----rack01</span>
+<span class="line">			|		|		|-----host01</span>
+<span class="line">			|		|				|-----osd.1</span>
+<span class="line">			|		|				|-----osd.2</span>
+<span class="line">			|		|</span>
+<span class="line">			|		|-----rack02</span>
+<span class="line">			|</span>
+<span class="line">			|</span>
+<span class="line">			|------room2</span>
+</code></pre></div>
 
-<h4 id="bucket-每个系统层级的一个拓扑"><a href="#bucket-每个系统层级的一个拓扑" class="headerlink" title="bucket(每个系统层级的一个拓扑)"></a>bucket(每个系统层级的一个拓扑)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># buckets</span><br><span class="line">host node65 &#123;</span><br><span class="line">        id -3           # do not change unnecessarily</span><br><span class="line">        id -4 class hdd         # do not change unnecessarily</span><br><span class="line">        # weight 0.195</span><br><span class="line">        alg straw2</span><br><span class="line">        hash 0  # rjenkins1</span><br><span class="line">        item osd.0 weight 0.098</span><br><span class="line">        item osd.2 weight 0.098</span><br><span class="line">&#125;</span><br><span class="line">host node66 &#123;</span><br><span class="line">        id -5           # do not change unnecessarily</span><br><span class="line">        id -6 class hdd         # do not change unnecessarily</span><br><span class="line">        # weight 0.195</span><br><span class="line">        alg straw2</span><br><span class="line">        hash 0  # rjenkins1</span><br><span class="line">        item osd.1 weight 0.098</span><br><span class="line">        item osd.3 weight 0.098</span><br><span class="line">&#125;</span><br><span class="line">root default &#123;</span><br><span class="line">        id -1           # do not change unnecessarily</span><br><span class="line">        id -2 class hdd         # do not change unnecessarily</span><br><span class="line">        # weight 0.391</span><br><span class="line">        alg straw2</span><br><span class="line">        hash 0  # rjenkins1</span><br><span class="line">        item node65 weight 0.195</span><br><span class="line">        item node66 weight 0.195</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="bucket-每个系统层级的一个拓扑"><a href="#bucket-每个系统层级的一个拓扑" class="headerlink" title="bucket(每个系统层级的一个拓扑)"></a>bucket(每个系统层级的一个拓扑)</h4><div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line"># buckets</span>
+<span class="line">host node65 &#123;</span>
+<span class="line">        id -3           # do not change unnecessarily</span>
+<span class="line">        id -4 class hdd         # do not change unnecessarily</span>
+<span class="line">        # weight 0.195</span>
+<span class="line">        alg straw2</span>
+<span class="line">        hash 0  # rjenkins1</span>
+<span class="line">        item osd.0 weight 0.098</span>
+<span class="line">        item osd.2 weight 0.098</span>
+<span class="line">&#125;</span>
+<span class="line">host node66 &#123;</span>
+<span class="line">        id -5           # do not change unnecessarily</span>
+<span class="line">        id -6 class hdd         # do not change unnecessarily</span>
+<span class="line">        # weight 0.195</span>
+<span class="line">        alg straw2</span>
+<span class="line">        hash 0  # rjenkins1</span>
+<span class="line">        item osd.1 weight 0.098</span>
+<span class="line">        item osd.3 weight 0.098</span>
+<span class="line">&#125;</span>
+<span class="line">root default &#123;</span>
+<span class="line">        id -1           # do not change unnecessarily</span>
+<span class="line">        id -2 class hdd         # do not change unnecessarily</span>
+<span class="line">        # weight 0.391</span>
+<span class="line">        alg straw2</span>
+<span class="line">        hash 0  # rjenkins1</span>
+<span class="line">        item node65 weight 0.195</span>
+<span class="line">        item node66 weight 0.195</span>
+<span class="line">&#125;</span>
+</code></pre></div>
 
 <p>部署方式（当前只用于bluestore）：  </p>
 <p>1.为考虑添加过程中出错，先备份原先的crash map</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> # crush map导出</span><br><span class="line">ceph osd getcrushmap -o crush-map</span><br><span class="line"></span><br><span class="line"> # crush map恢复</span><br><span class="line">ceph osd setcrushmap -i crush-map</span><br><span class="line"></span><br><span class="line"> # crush map导出查看</span><br><span class="line">crushtool -d crush-map -o crush-map-decompiled</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line"> # crush map导出</span>
+<span class="line">ceph osd getcrushmap -o crush-map</span>
+<span class="line"></span>
+<span class="line"> # crush map恢复</span>
+<span class="line">ceph osd setcrushmap -i crush-map</span>
+<span class="line"></span>
+<span class="line"> # crush map导出查看</span>
+<span class="line">crushtool -d crush-map -o crush-map-decompiled</span>
+</code></pre></div>
 
 <p>2.添加osd的在root下的系统拓扑</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#39;host级别&#39;: ceph osd crush add osd.&#123;osd_id&#125; &#123;osd weight&#125; root&#x3D;&#123;root_rulename&#125; host&#x3D;&#123;hostname&#125;</span><br><span class="line">&#39;rack级别&#39;: ceph osd crush add osd.&#123;osd_id&#125; &#123;osd weight&#125; root&#x3D;&#123;root_rulename&#125; rack&#x3D;&#123;rack_name&#125; host&#x3D;&#123;hostname&#125;</span><br><span class="line">&#39;room级别&#39;: ceph osd crush add osd.&#123;osd_id&#125; &#123;osd weight&#125; root&#x3D;&#123;root_rulename&#125; room&#x3D;&#123;room_name&#125; rack&#x3D;&#123;rack_name&#125; host&#x3D;&#123;hostname&#125;</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">&#39;host级别&#39;: ceph osd crush add osd.&#123;osd_id&#125; &#123;osd weight&#125; root&#x3D;&#123;root_rulename&#125; host&#x3D;&#123;hostname&#125;</span>
+<span class="line">&#39;rack级别&#39;: ceph osd crush add osd.&#123;osd_id&#125; &#123;osd weight&#125; root&#x3D;&#123;root_rulename&#125; rack&#x3D;&#123;rack_name&#125; host&#x3D;&#123;hostname&#125;</span>
+<span class="line">&#39;room级别&#39;: ceph osd crush add osd.&#123;osd_id&#125; &#123;osd weight&#125; root&#x3D;&#123;root_rulename&#125; room&#x3D;&#123;room_name&#125; rack&#x3D;&#123;rack_name&#125; host&#x3D;&#123;hostname&#125;</span>
+</code></pre></div>
 
 <p>例子：部署1个root，1个room，2个rack，每个rack下1个host</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">部署命令：</span><br><span class="line">ceph osd crush add osd.0 1 root&#x3D;piglet room&#x3D;pig-room rack&#x3D;pig-rack1 host&#x3D;pig-node65</span><br><span class="line">ceph osd crush add osd.1 1 root&#x3D;piglet room&#x3D;pig-room rack&#x3D;pig-rack2 host&#x3D;pig-node66</span><br><span class="line">ceph osd crush add osd.2 1 root&#x3D;piglet room&#x3D;pig-room rack&#x3D;pig-rack1 host&#x3D;pig-node65</span><br><span class="line">ceph osd crush add osd.3 1 root&#x3D;piglet room&#x3D;pig-room rack&#x3D;pig-rack2 host&#x3D;pig-node66</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">部署命令：</span>
+<span class="line">ceph osd crush add osd.0 1 root&#x3D;piglet room&#x3D;pig-room rack&#x3D;pig-rack1 host&#x3D;pig-node65</span>
+<span class="line">ceph osd crush add osd.1 1 root&#x3D;piglet room&#x3D;pig-room rack&#x3D;pig-rack2 host&#x3D;pig-node66</span>
+<span class="line">ceph osd crush add osd.2 1 root&#x3D;piglet room&#x3D;pig-room rack&#x3D;pig-rack1 host&#x3D;pig-node65</span>
+<span class="line">ceph osd crush add osd.3 1 root&#x3D;piglet room&#x3D;pig-room rack&#x3D;pig-rack2 host&#x3D;pig-node66</span>
+</code></pre></div>
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></td><td class="code"><pre><span class="line">导出crush map</span><br><span class="line"></span><br><span class="line"> # begin crush map</span><br><span class="line">tunable choose_local_tries 0</span><br><span class="line">tunable choose_local_fallback_tries 0</span><br><span class="line">tunable choose_total_tries 50</span><br><span class="line">tunable chooseleaf_descend_once 1</span><br><span class="line">tunable chooseleaf_vary_r 1</span><br><span class="line">tunable chooseleaf_stable 1</span><br><span class="line">tunable straw_calc_version 1</span><br><span class="line">tunable allowed_bucket_algs 54</span><br><span class="line"></span><br><span class="line"> # devices</span><br><span class="line">device 0 osd.0 class hdd</span><br><span class="line">device 1 osd.1 class hdd</span><br><span class="line">device 2 osd.2 class hdd</span><br><span class="line">device 3 osd.3 class hdd</span><br><span class="line"></span><br><span class="line"> # types</span><br><span class="line">type 0 osd</span><br><span class="line">type 1 host</span><br><span class="line">type 2 chassis</span><br><span class="line">type 3 rack</span><br><span class="line">type 4 row</span><br><span class="line">type 5 pdu</span><br><span class="line">type 6 pod</span><br><span class="line">type 7 room</span><br><span class="line">type 8 datacenter</span><br><span class="line">type 9 region</span><br><span class="line">type 10 root</span><br><span class="line"></span><br><span class="line"> # buckets</span><br><span class="line">host node65 &#123;</span><br><span class="line">        id -3           # do not change unnecessarily</span><br><span class="line">        id -4 class hdd         # do not change unnecessarily</span><br><span class="line">        # weight 0.195</span><br><span class="line">        alg straw2</span><br><span class="line">        hash 0  # rjenkins1</span><br><span class="line">        item osd.0 weight 0.098</span><br><span class="line">        item osd.2 weight 0.098</span><br><span class="line">&#125;</span><br><span class="line">host node66 &#123;</span><br><span class="line">        id -5           # do not change unnecessarily</span><br><span class="line">        id -6 class hdd         # do not change unnecessarily</span><br><span class="line">        # weight 0.195</span><br><span class="line">        alg straw2</span><br><span class="line">        hash 0  # rjenkins1</span><br><span class="line">        item osd.1 weight 0.098</span><br><span class="line">        item osd.3 weight 0.098</span><br><span class="line">&#125;</span><br><span class="line">root default &#123;</span><br><span class="line">        id -1           # do not change unnecessarily</span><br><span class="line">        id -2 class hdd         # do not change unnecessarily</span><br><span class="line">        # weight 0.391</span><br><span class="line">        alg straw2</span><br><span class="line">        hash 0  # rjenkins1</span><br><span class="line">        item node65 weight 0.195</span><br><span class="line">        item node66 weight 0.195</span><br><span class="line">&#125;</span><br><span class="line">host pig-node65 &#123;</span><br><span class="line">        id -7           # do not change unnecessarily</span><br><span class="line">        id -11 class hdd                # do not change unnecessarily</span><br><span class="line">        # weight 2.000</span><br><span class="line">        alg straw2</span><br><span class="line">        hash 0  # rjenkins1</span><br><span class="line">        item osd.0 weight 1.000</span><br><span class="line">        item osd.2 weight 1.000</span><br><span class="line">&#125;</span><br><span class="line">rack pig-rack1 &#123;</span><br><span class="line">        id -8           # do not change unnecessarily</span><br><span class="line">        id -12 class hdd                # do not change unnecessarily</span><br><span class="line">        # weight 2.000</span><br><span class="line">        alg straw2</span><br><span class="line">        hash 0  # rjenkins1</span><br><span class="line">        item pig-node65 weight 2.000</span><br><span class="line">&#125;</span><br><span class="line">host pig-node66 &#123;</span><br><span class="line">        id -15          # do not change unnecessarily</span><br><span class="line">        id -17 class hdd                # do not change unnecessarily</span><br><span class="line">        # weight 2.000</span><br><span class="line">        alg straw2</span><br><span class="line">        hash 0  # rjenkins1</span><br><span class="line">        item osd.1 weight 1.000</span><br><span class="line">        item osd.3 weight 1.000</span><br><span class="line">&#125;</span><br><span class="line">rack pig-rack2 &#123;</span><br><span class="line">        id -16          # do not change unnecessarily</span><br><span class="line">        id -18 class hdd                # do not change unnecessarily</span><br><span class="line">        # weight 2.000</span><br><span class="line">        alg straw2</span><br><span class="line">        hash 0  # rjenkins1</span><br><span class="line">        item pig-node66 weight 2.000</span><br><span class="line">&#125;</span><br><span class="line">room pig-room &#123;</span><br><span class="line">        id -9           # do not change unnecessarily</span><br><span class="line">        id -13 class hdd                # do not change unnecessarily</span><br><span class="line">        # weight 4.000</span><br><span class="line">        alg straw2</span><br><span class="line">        hash 0  # rjenkins1</span><br><span class="line">        item pig-rack1 weight 2.000</span><br><span class="line">        item pig-rack2 weight 2.000</span><br><span class="line">&#125;</span><br><span class="line">root piglet &#123;</span><br><span class="line">        id -10          # do not change unnecessarily</span><br><span class="line">        id -14 class hdd                # do not change unnecessarily</span><br><span class="line">        # weight 4.000</span><br><span class="line">        alg straw2</span><br><span class="line">        hash 0  # rjenkins1</span><br><span class="line">        item pig-room weight 4.000</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> # rules</span><br><span class="line">rule replicated_rule &#123;</span><br><span class="line">        id 0</span><br><span class="line">        type replicated</span><br><span class="line">        min_size 1</span><br><span class="line">        max_size 10</span><br><span class="line">        step take default</span><br><span class="line">        step chooseleaf firstn 0 type host</span><br><span class="line">        step emit</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> # end crush map</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">导出crush map</span>
+<span class="line"></span>
+<span class="line"> # begin crush map</span>
+<span class="line">tunable choose_local_tries 0</span>
+<span class="line">tunable choose_local_fallback_tries 0</span>
+<span class="line">tunable choose_total_tries 50</span>
+<span class="line">tunable chooseleaf_descend_once 1</span>
+<span class="line">tunable chooseleaf_vary_r 1</span>
+<span class="line">tunable chooseleaf_stable 1</span>
+<span class="line">tunable straw_calc_version 1</span>
+<span class="line">tunable allowed_bucket_algs 54</span>
+<span class="line"></span>
+<span class="line"> # devices</span>
+<span class="line">device 0 osd.0 class hdd</span>
+<span class="line">device 1 osd.1 class hdd</span>
+<span class="line">device 2 osd.2 class hdd</span>
+<span class="line">device 3 osd.3 class hdd</span>
+<span class="line"></span>
+<span class="line"> # types</span>
+<span class="line">type 0 osd</span>
+<span class="line">type 1 host</span>
+<span class="line">type 2 chassis</span>
+<span class="line">type 3 rack</span>
+<span class="line">type 4 row</span>
+<span class="line">type 5 pdu</span>
+<span class="line">type 6 pod</span>
+<span class="line">type 7 room</span>
+<span class="line">type 8 datacenter</span>
+<span class="line">type 9 region</span>
+<span class="line">type 10 root</span>
+<span class="line"></span>
+<span class="line"> # buckets</span>
+<span class="line">host node65 &#123;</span>
+<span class="line">        id -3           # do not change unnecessarily</span>
+<span class="line">        id -4 class hdd         # do not change unnecessarily</span>
+<span class="line">        # weight 0.195</span>
+<span class="line">        alg straw2</span>
+<span class="line">        hash 0  # rjenkins1</span>
+<span class="line">        item osd.0 weight 0.098</span>
+<span class="line">        item osd.2 weight 0.098</span>
+<span class="line">&#125;</span>
+<span class="line">host node66 &#123;</span>
+<span class="line">        id -5           # do not change unnecessarily</span>
+<span class="line">        id -6 class hdd         # do not change unnecessarily</span>
+<span class="line">        # weight 0.195</span>
+<span class="line">        alg straw2</span>
+<span class="line">        hash 0  # rjenkins1</span>
+<span class="line">        item osd.1 weight 0.098</span>
+<span class="line">        item osd.3 weight 0.098</span>
+<span class="line">&#125;</span>
+<span class="line">root default &#123;</span>
+<span class="line">        id -1           # do not change unnecessarily</span>
+<span class="line">        id -2 class hdd         # do not change unnecessarily</span>
+<span class="line">        # weight 0.391</span>
+<span class="line">        alg straw2</span>
+<span class="line">        hash 0  # rjenkins1</span>
+<span class="line">        item node65 weight 0.195</span>
+<span class="line">        item node66 weight 0.195</span>
+<span class="line">&#125;</span>
+<span class="line">host pig-node65 &#123;</span>
+<span class="line">        id -7           # do not change unnecessarily</span>
+<span class="line">        id -11 class hdd                # do not change unnecessarily</span>
+<span class="line">        # weight 2.000</span>
+<span class="line">        alg straw2</span>
+<span class="line">        hash 0  # rjenkins1</span>
+<span class="line">        item osd.0 weight 1.000</span>
+<span class="line">        item osd.2 weight 1.000</span>
+<span class="line">&#125;</span>
+<span class="line">rack pig-rack1 &#123;</span>
+<span class="line">        id -8           # do not change unnecessarily</span>
+<span class="line">        id -12 class hdd                # do not change unnecessarily</span>
+<span class="line">        # weight 2.000</span>
+<span class="line">        alg straw2</span>
+<span class="line">        hash 0  # rjenkins1</span>
+<span class="line">        item pig-node65 weight 2.000</span>
+<span class="line">&#125;</span>
+<span class="line">host pig-node66 &#123;</span>
+<span class="line">        id -15          # do not change unnecessarily</span>
+<span class="line">        id -17 class hdd                # do not change unnecessarily</span>
+<span class="line">        # weight 2.000</span>
+<span class="line">        alg straw2</span>
+<span class="line">        hash 0  # rjenkins1</span>
+<span class="line">        item osd.1 weight 1.000</span>
+<span class="line">        item osd.3 weight 1.000</span>
+<span class="line">&#125;</span>
+<span class="line">rack pig-rack2 &#123;</span>
+<span class="line">        id -16          # do not change unnecessarily</span>
+<span class="line">        id -18 class hdd                # do not change unnecessarily</span>
+<span class="line">        # weight 2.000</span>
+<span class="line">        alg straw2</span>
+<span class="line">        hash 0  # rjenkins1</span>
+<span class="line">        item pig-node66 weight 2.000</span>
+<span class="line">&#125;</span>
+<span class="line">room pig-room &#123;</span>
+<span class="line">        id -9           # do not change unnecessarily</span>
+<span class="line">        id -13 class hdd                # do not change unnecessarily</span>
+<span class="line">        # weight 4.000</span>
+<span class="line">        alg straw2</span>
+<span class="line">        hash 0  # rjenkins1</span>
+<span class="line">        item pig-rack1 weight 2.000</span>
+<span class="line">        item pig-rack2 weight 2.000</span>
+<span class="line">&#125;</span>
+<span class="line">root piglet &#123;</span>
+<span class="line">        id -10          # do not change unnecessarily</span>
+<span class="line">        id -14 class hdd                # do not change unnecessarily</span>
+<span class="line">        # weight 4.000</span>
+<span class="line">        alg straw2</span>
+<span class="line">        hash 0  # rjenkins1</span>
+<span class="line">        item pig-room weight 4.000</span>
+<span class="line">&#125;</span>
+<span class="line"></span>
+<span class="line"> # rules</span>
+<span class="line">rule replicated_rule &#123;</span>
+<span class="line">        id 0</span>
+<span class="line">        type replicated</span>
+<span class="line">        min_size 1</span>
+<span class="line">        max_size 10</span>
+<span class="line">        step take default</span>
+<span class="line">        step chooseleaf firstn 0 type host</span>
+<span class="line">        step emit</span>
+<span class="line">&#125;</span>
+<span class="line"></span>
+<span class="line"> # end crush map</span>
+</code></pre></div>
 
 
-<h3 id="部署Placement-Rules-pg对象的副本、纠删选择规则"><a href="#部署Placement-Rules-pg对象的副本、纠删选择规则" class="headerlink" title="部署Placement Rules(pg对象的副本、纠删选择规则)"></a>部署Placement Rules(pg对象的副本、纠删选择规则)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># rules</span><br><span class="line">rule replicated_rule &#123;</span><br><span class="line">        id 0                 # ruleset的id编号</span><br><span class="line">        type replicated      # 类型为replicated 或者 erasure</span><br><span class="line">        min_size 1           # 副本数最小值</span><br><span class="line">        max_size 10          # 副本数最大值</span><br><span class="line">        step take default    # 选择一个名称为default的bucket，做下一步输入</span><br><span class="line">        step chooseleaf firstn 0 type host  # firstn 0为表示为pool设置的副本数，indep为纠删规则</span><br><span class="line">        step emit</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="部署Placement-Rules-pg对象的副本、纠删选择规则"><a href="#部署Placement-Rules-pg对象的副本、纠删选择规则" class="headerlink" title="部署Placement Rules(pg对象的副本、纠删选择规则)"></a>部署Placement Rules(pg对象的副本、纠删选择规则)</h3><div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line"># rules</span>
+<span class="line">rule replicated_rule &#123;</span>
+<span class="line">        id 0                 # ruleset的id编号</span>
+<span class="line">        type replicated      # 类型为replicated 或者 erasure</span>
+<span class="line">        min_size 1           # 副本数最小值</span>
+<span class="line">        max_size 10          # 副本数最大值</span>
+<span class="line">        step take default    # 选择一个名称为default的bucket，做下一步输入</span>
+<span class="line">        step chooseleaf firstn 0 type host  # firstn 0为表示为pool设置的副本数，indep为纠删规则</span>
+<span class="line">        step emit</span>
+<span class="line">&#125;</span>
+</code></pre></div>
 
 <h4 id="placement-rules执行流程"><a href="#placement-rules执行流程" class="headerlink" title="placement rules执行流程"></a>placement rules执行流程</h4><p>1、take操作选择一个Bucket ，一般是root类型的Bucket</p>
 <p>2、choose操作有不同的选择方式，其输入都是上一步的输出：</p>
@@ -131,198 +233,122 @@
 <p>1、choose firstn {num} type {Bucket-type}</p>
 <p>2、choose firstn 1 type osd</p>
 <h4 id="配置规则"><a href="#配置规则" class="headerlink" title="配置规则"></a>配置规则</h4><p>一：副本规则</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#39;rack级别&#39;: ceph osd crush rule create-simple &#123;rule_name&#125; root rack</span><br><span class="line">&#39;room级别&#39;: ceph osd crush rule create-simple &#123;rule_name&#125; root room</span><br><span class="line">&#39;host级别&#39;: ceph osd crush rule create-simple &#123;rule_name&#125; root host</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">&#39;rack级别&#39;: ceph osd crush rule create-simple &#123;rule_name&#125; root rack</span>
+<span class="line">&#39;room级别&#39;: ceph osd crush rule create-simple &#123;rule_name&#125; root room</span>
+<span class="line">&#39;host级别&#39;: ceph osd crush rule create-simple &#123;rule_name&#125; root host</span>
+</code></pre></div>
 
 <p>例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd crush rule create-simple pig-rep piglet rack</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">ceph osd crush rule create-simple pig-rep piglet rack</span>
+</code></pre></div>
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># rules</span><br><span class="line">rule replicated_rule &#123;</span><br><span class="line">        id 0</span><br><span class="line">        type replicated</span><br><span class="line">        min_size 1</span><br><span class="line">        max_size 10</span><br><span class="line">        step take default</span><br><span class="line">        step chooseleaf firstn 0 type host</span><br><span class="line">        step emit</span><br><span class="line">&#125;</span><br><span class="line">rule pig-rep &#123;</span><br><span class="line">        id 1</span><br><span class="line">        type replicated</span><br><span class="line">        min_size 1</span><br><span class="line">        max_size 10</span><br><span class="line">        step take piglet</span><br><span class="line">        step chooseleaf firstn 0 type rack</span><br><span class="line">        step emit</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line"># rules</span>
+<span class="line">rule replicated_rule &#123;</span>
+<span class="line">        id 0</span>
+<span class="line">        type replicated</span>
+<span class="line">        min_size 1</span>
+<span class="line">        max_size 10</span>
+<span class="line">        step take default</span>
+<span class="line">        step chooseleaf firstn 0 type host</span>
+<span class="line">        step emit</span>
+<span class="line">&#125;</span>
+<span class="line">rule pig-rep &#123;</span>
+<span class="line">        id 1</span>
+<span class="line">        type replicated</span>
+<span class="line">        min_size 1</span>
+<span class="line">        max_size 10</span>
+<span class="line">        step take piglet</span>
+<span class="line">        step chooseleaf firstn 0 type rack</span>
+<span class="line">        step emit</span>
+<span class="line">&#125;</span>
+</code></pre></div>
 
 <p>二：纠删规则</p>
 <p>1.配置纠删规则</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd erasure-code-profile set my-ec3 k&#x3D;3 m&#x3D;2 ruleset-failure-domain&#x3D;rack crush-root&#x3D;piglet</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">ceph osd erasure-code-profile set my-ec3 k&#x3D;3 m&#x3D;2 ruleset-failure-domain&#x3D;rack crush-root&#x3D;piglet</span>
+</code></pre></div>
 
 <p>查看纠删配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd erasure-code-profile get my-ec3</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">crush-device-class&#x3D;</span><br><span class="line">crush-failure-domain&#x3D;rack</span><br><span class="line">crush-root&#x3D;piglet</span><br><span class="line">jerasure-per-chunk-alignment&#x3D;false</span><br><span class="line">k&#x3D;3</span><br><span class="line">m&#x3D;2</span><br><span class="line">plugin&#x3D;jerasure</span><br><span class="line">technique&#x3D;reed_sol_van</span><br><span class="line">w&#x3D;8</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">ceph osd erasure-code-profile get my-ec3</span>
+</code></pre></div>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">crush-device-class&#x3D;</span>
+<span class="line">crush-failure-domain&#x3D;rack</span>
+<span class="line">crush-root&#x3D;piglet</span>
+<span class="line">jerasure-per-chunk-alignment&#x3D;false</span>
+<span class="line">k&#x3D;3</span>
+<span class="line">m&#x3D;2</span>
+<span class="line">plugin&#x3D;jerasure</span>
+<span class="line">technique&#x3D;reed_sol_van</span>
+<span class="line">w&#x3D;8</span>
+</code></pre></div>
 
 <p>2.创建crush map规则</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd crush rule create-erasure &#123;rule_name&#125; &#123;ec-profile&#125;</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">ceph osd crush rule create-erasure &#123;rule_name&#125; &#123;ec-profile&#125;</span>
+</code></pre></div>
 
 <p>例子:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd crush rule create-erasure my-ec3  my-ec3</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">ceph osd crush rule create-erasure my-ec3  my-ec3</span>
+</code></pre></div>
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"> # rules</span><br><span class="line">rule replicated_rule &#123;</span><br><span class="line">        id 0</span><br><span class="line">        type replicated</span><br><span class="line">        min_size 1</span><br><span class="line">        max_size 10</span><br><span class="line">        step take default</span><br><span class="line">        step chooseleaf firstn 0 type host</span><br><span class="line">        step emit</span><br><span class="line">&#125;</span><br><span class="line">rule pig-rep &#123;</span><br><span class="line">        id 1</span><br><span class="line">        type replicated</span><br><span class="line">        min_size 1</span><br><span class="line">        max_size 10</span><br><span class="line">        step take piglet</span><br><span class="line">        step chooseleaf firstn 0 type rack</span><br><span class="line">        step emit</span><br><span class="line">&#125;</span><br><span class="line">rule my-ec3 &#123;</span><br><span class="line">        id 2</span><br><span class="line">        type erasure</span><br><span class="line">        min_size 3</span><br><span class="line">        max_size 5</span><br><span class="line">        step set_chooseleaf_tries 5</span><br><span class="line">        step set_choose_tries 100</span><br><span class="line">        step take piglet</span><br><span class="line">        step chooseleaf indep 0 type rack</span><br><span class="line">        step emit</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line"> # rules</span>
+<span class="line">rule replicated_rule &#123;</span>
+<span class="line">        id 0</span>
+<span class="line">        type replicated</span>
+<span class="line">        min_size 1</span>
+<span class="line">        max_size 10</span>
+<span class="line">        step take default</span>
+<span class="line">        step chooseleaf firstn 0 type host</span>
+<span class="line">        step emit</span>
+<span class="line">&#125;</span>
+<span class="line">rule pig-rep &#123;</span>
+<span class="line">        id 1</span>
+<span class="line">        type replicated</span>
+<span class="line">        min_size 1</span>
+<span class="line">        max_size 10</span>
+<span class="line">        step take piglet</span>
+<span class="line">        step chooseleaf firstn 0 type rack</span>
+<span class="line">        step emit</span>
+<span class="line">&#125;</span>
+<span class="line">rule my-ec3 &#123;</span>
+<span class="line">        id 2</span>
+<span class="line">        type erasure</span>
+<span class="line">        min_size 3</span>
+<span class="line">        max_size 5</span>
+<span class="line">        step set_chooseleaf_tries 5</span>
+<span class="line">        step set_choose_tries 100</span>
+<span class="line">        step take piglet</span>
+<span class="line">        step chooseleaf indep 0 type rack</span>
+<span class="line">        step emit</span>
+<span class="line">&#125;</span>
+</code></pre></div>
 
 <h3 id="配置池"><a href="#配置池" class="headerlink" title="配置池"></a>配置池</h3><p>一、配置副本池</p>
 <p>创建副本池：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd pool create &#123;pool-name&#125; &#123;pg-num&#125; [&#123;pgp-num&#125;] [replicated] [crush-ruleset-name]</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">ceph osd pool create &#123;pool-name&#125; &#123;pg-num&#125; [&#123;pgp-num&#125;] [replicated] [crush-ruleset-name]</span>
+</code></pre></div>
 
 <p>例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd pool create my-rep-pool 8 8 replicated pig-rep</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">ceph osd pool create my-rep-pool 8 8 replicated pig-rep</span>
+</code></pre></div>
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pool 4 &#39;my-rep-pool&#39; replicated size 2 min_size 1 crush_rule 1 object_hash rjenkins pg_num 8 pgp_num 8 last_change 41 flags hashpspool stripe_width 0</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">pool 4 &#39;my-rep-pool&#39; replicated size 2 min_size 1 crush_rule 1 object_hash rjenkins pg_num 8 pgp_num 8 last_change 41 flags hashpspool stripe_width 0</span>
+</code></pre></div>
 
 <p>二、配置纠删池</p>
 <p>创建纠删池</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd pool create &#123;pool-name&#125; &#123;pg-num&#125;  &#123;pgp-num&#125;   erasure  [erasure-code-profile] [rule-name]</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">ceph osd pool create &#123;pool-name&#125; &#123;pg-num&#125;  &#123;pgp-num&#125;   erasure  [erasure-code-profile] [rule-name]</span>
+</code></pre></div>
 
 <p>例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd pool create test-1 8 8 erasure my-ec3 my-ec3</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">ceph osd pool create test-1 8 8 erasure my-ec3 my-ec3</span>
+</code></pre></div>
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pool 7 &#39;test-1&#39; erasure size 5 min_size 4 crush_rule 2 object_hash rjenkins pg_num 8 pgp_num 8 last_change 58 flags hashpspool stripe_width 12288</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">pool 7 &#39;test-1&#39; erasure size 5 min_size 4 crush_rule 2 object_hash rjenkins pg_num 8 pgp_num 8 last_change 58 flags hashpspool stripe_width 12288</span>
+</code></pre></div>
 
 <p>3.替换其他存储池crush map规则</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd pool set [pool-name] crush_rule [rule-name]</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line">ceph osd pool set [pool-name] crush_rule [rule-name]</span>
+</code></pre></div>
 
 <h3 id="相关crush命令"><a href="#相关crush命令" class="headerlink" title="相关crush命令"></a>相关crush命令</h3>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://github.com/PigletZ/2020/03/17/%E5%AD%98%E5%82%A8%E7%AD%96%E7%95%A5%E9%83%A8%E7%BD%B2/" data-id="ckhyqvvwl00062knx358zeqxn" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/" rel="tag">ceph</a></li></ul>
-
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2020/04/05/Kdump%E3%80%81watchdog%E3%80%81BMC%E9%85%8D%E7%BD%AE/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Kdump、watchdog、BMC配置
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/03/12/%E6%96%87%E4%BB%B6%E6%9F%A5%E8%AF%A2API%E6%8E%A5%E5%8F%A3/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">对象文件查询接口</div>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ceph/">ceph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/interface/">interface</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ceph/" rel="tag">ceph</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/interface/" rel="tag">interface</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mon/" rel="tag">mon</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/tags/interface/" style="font-size: 10px;">interface</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/mon/" style="font-size: 10px;">mon</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2020/11/26/ceph%E4%BF%AE%E6%94%B9public_network/">ceph修改public_network</a>
-          </li>
-        
-          <li>
-            <a href="/2020/09/11/ceph%E7%BC%93%E5%AD%98%E5%88%86%E5%B1%82/">ceph缓存分层</a>
-          </li>
-        
-          <li>
-            <a href="/2020/04/05/Kdump%E3%80%81watchdog%E3%80%81BMC%E9%85%8D%E7%BD%AE/">Kdump、watchdog、BMC配置</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/17/%E5%AD%98%E5%82%A8%E7%AD%96%E7%95%A5%E9%83%A8%E7%BD%B2/">存储策略部署文档</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/12/%E6%96%87%E4%BB%B6%E6%9F%A5%E8%AF%A2API%E6%8E%A5%E5%8F%A3/">对象文件查询接口</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2020 JH Zeng<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-  </div>
-</body>
-</html>
+<div class="article-end"><span>— END OF NOTE —</span><a href="/archives/">返回文章归档 ↗</a></div><a class="next-post" href="/2020/03/12/%E6%96%87%E4%BB%B6%E6%9F%A5%E8%AF%A2API%E6%8E%A5%E5%8F%A3/"><span class="eyebrow">继续阅读</span><strong>对象文件查询接口</strong><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a></article><aside class="toc"><div class="eyebrow">本篇目录</div><nav aria-label="文章目录"><a class="toc-level-3" href="#部署Cluster-Map">部署Cluster Map</a><a class="toc-level-4" href="#map的系统层级-树形结构，从root开始">map的系统层级(树形结构，从root开始)</a><a class="toc-level-4" href="#bucket-每个系统层级的一个拓扑">bucket(每个系统层级的一个拓扑)</a><a class="toc-level-3" href="#部署Placement-Rules-pg对象的副本、纠删选择规则">部署Placement Rules(pg对象的副本、纠删选择规则)</a><a class="toc-level-4" href="#placement-rules执行流程">placement rules执行流程</a><a class="toc-level-4" href="#配置规则">配置规则</a><a class="toc-level-3" href="#配置池">配置池</a><a class="toc-level-3" href="#相关crush命令">相关crush命令</a></nav><a class="toc-top" href="#main">↑ 回到顶部</a></aside></div></main><footer class="site-footer shell"><div><a href="/">Cepher Piglet</a><span>记录，理解，再向前一步。</span></div><div><span>© 2020–2026 JH Zeng</span><a href="/atom.xml">RSS ↗</a><a href="https://github.com/PigletZ" rel="noopener">GitHub ↗</a></div></footer></body></html>

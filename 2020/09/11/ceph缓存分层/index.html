@@ -1,103 +1,5 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-
-  
-  <title>ceph缓存分层 | Cepher Piglet</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="缓存分类 writeback（热数据） WRITEBACK模式是最复杂也是最有实用价值的模式，其具体实现会按照请求类型、cache状态综合判断，并复用前三种模式下的一些处理细节进行综合处理。处于这种模式下的cache tier存储池，其处理流程如下：  判断cache tier存储池的状态是否已满，如果已满，则对于读请求直接调用do_proxy_read，对于写请求直接将OP加入到waiting_">
-<meta property="og:type" content="article">
-<meta property="og:title" content="ceph缓存分层">
-<meta property="og:url" content="https://github.com/PigletZ/2020/09/11/ceph%E7%BC%93%E5%AD%98%E5%88%86%E5%B1%82/index.html">
-<meta property="og:site_name" content="Cepher Piglet">
-<meta property="og:description" content="缓存分类 writeback（热数据） WRITEBACK模式是最复杂也是最有实用价值的模式，其具体实现会按照请求类型、cache状态综合判断，并复用前三种模式下的一些处理细节进行综合处理。处于这种模式下的cache tier存储池，其处理流程如下：  判断cache tier存储池的状态是否已满，如果已满，则对于读请求直接调用do_proxy_read，对于写请求直接将OP加入到waiting_">
-<meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-09-11T10:12:28.670Z">
-<meta property="article:modified_time" content="2020-09-11T10:18:14.139Z">
-<meta property="article:author" content="JH Zeng">
-<meta property="article:tag" content="ceph">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Cepher Piglet" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  
-<link rel="stylesheet" href="/css/style.css">
-
-<meta name="generator" content="Hexo 4.2.0"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Cepher Piglet</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">分布式存储的一只小猪</a>
-        </h2>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://github.com/PigletZ"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-ceph缓存分层" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/09/11/ceph%E7%BC%93%E5%AD%98%E5%88%86%E5%B1%82/" class="article-date">
-  <time datetime="2020-09-11T10:12:28.670Z" itemprop="datePublished">2020-09-11</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ceph/">ceph</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      ceph缓存分层
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="缓存分类"><a href="#缓存分类" class="headerlink" title="缓存分类"></a>缓存分类</h2><h3 id="writeback（热数据）"><a href="#writeback（热数据）" class="headerlink" title="writeback（热数据）"></a>writeback（热数据）</h3><p>WRITEBACK模式是最复杂也是最有实用价值的模式，其具体实现会按照请求类型、cache状态综合判断，并复用前三种模式下的一些处理细节进行综合处理。处于这种模式下的cache tier存储池，其处理流程如下：</p>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>ceph缓存分层 · Cepher Piglet</title><meta name="description" content="Ceph 缓存分层笔记：writeback 模式、缓存池配置与数据迁移。"><link rel="canonical" href="https://pigletz.github.io/2020/09/11/ceph%E7%BC%93%E5%AD%98%E5%88%86%E5%B1%82/"><meta property="og:type" content="article"><meta property="og:title" content="ceph缓存分层"><meta property="og:description" content="Ceph 缓存分层笔记：writeback 模式、缓存池配置与数据迁移。"><meta property="og:url" content="https://pigletz.github.io/2020/09/11/ceph%E7%BC%93%E5%AD%98%E5%88%86%E5%B1%82/"><meta property="og:site_name" content="Cepher Piglet"><meta property="og:locale" content="zh_CN"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="alternate" href="/atom.xml" type="application/atom+xml" title="Cepher Piglet RSS"><script src="/assets/theme.js"></script><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/site.js"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"ceph缓存分层","datePublished":"2020-09-11","author":{"@type":"Person","name":"JH Zeng"},"url":"https://pigletz.github.io/2020/09/11/ceph%E7%BC%93%E5%AD%98%E5%88%86%E5%B1%82/"}</script></head><body><a class="skip" href="#main">跳到正文</a><header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-icon"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M10 14 8 5l10 6m12 3 2-9-10 6" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><rect x="5" y="10" width="30" height="25" rx="12" fill="currentColor"/><ellipse cx="20" cy="25" rx="8" ry="5" fill="var(--bg)"/><path d="M17 24v2m6-2v2" stroke="currentColor" stroke-width="2"/><circle cx="13" cy="18" r="1.5" fill="var(--bg)"/><circle cx="27" cy="18" r="1.5" fill="var(--bg)"/></svg></span><span>Cepher Piglet<span class="brand-sub">ENGINEERING NOTES</span></span></a><nav aria-label="主导航"><a href="/">首页</a><a href="/archives/">归档</a><a href="/about/">关于</a></nav><div class="header-actions"><a class="search-link" href="/search/" aria-label="搜索文章"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><span>搜索</span><kbd>/</kbd></a><button class="icon-button" id="theme-toggle" aria-label="切换深浅主题"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/></svg></button></div></div></header><main id="main" class="shell"><div class="breadcrumb"><a href="/">首页</a><span>/</span><a href="/categories/ceph/">Ceph · 分布式存储</a></div><header class="article-head"><div class="post-meta"><span class="category">CEPH</span><time datetime="2020-09-11">2020.09.11</time><span>14 分钟阅读</span></div><h1>ceph缓存分层</h1><p>Ceph 缓存分层笔记：writeback 模式、缓存池配置与数据迁移。</p><div class="article-author"><span class="small-avatar">P</span> JH Zeng <span>·</span> <a href="/tags/ceph/">#ceph</a></div></header><div class="article-layout"><article class="prose"><p class="historical-note">发表于 2020-09-11 · 本文保留当年的技术记录，使用前请结合当前版本文档核对。</p><h2 id="缓存分类"><a href="#缓存分类" class="headerlink" title="缓存分类"></a>缓存分类</h2><h3 id="writeback（热数据）"><a href="#writeback（热数据）" class="headerlink" title="writeback（热数据）"></a>writeback（热数据）</h3><p>WRITEBACK模式是最复杂也是最有实用价值的模式，其具体实现会按照请求类型、cache状态综合判断，并复用前三种模式下的一些处理细节进行综合处理。处于这种模式下的cache tier存储池，其处理流程如下：</p>
 <p>判断cache tier存储池的状态是否已满，如果已满，则对于读请求直接调用do_proxy_read，对于写请求直接将OP加入到waiting_for_cache_not_full队列，并在下一次有新的请求达到时重新放入OP队列处理。</p>
 <p>在cache tier未满的情况下，先判断是否必须进行promote，如果需要就调用promote_object，先阻塞当前请求，从后端存储池读取一份数据到cache tier存储池，并在完成之后再将当前请求加入OP队列</p>
 <p>在cache tier未满且不会强制promote时，这也是最常见的情况下：对于写入请求，会先阻塞，调用promote_object从后端读取一份数据并保存，完成之后将当前请求重新加入OP队列，这样下一次执行这个读请求时，会判断已经存在于cache tier中，就直接写入在cache tier存储池中；对于读请求，则会首先调用 do_proxy_read从后端存储池读取数据但不保存在cache tier存储池中，之后再判断本地读请求是否需要跳过promote，这是在创建该OP时设置的一个flag，通过op-&gt;need_skip_promote来判断，在所有的OP请求中有两种场景会设置不需promote，否则都会执行promote从后端存储池读取一份数据保存在cache tier存储池</p>
@@ -125,15 +27,60 @@
 <p>cache_target_dirty_high_ratio<br>描述：缓存存储池内包含的已修改（脏的）对象达到此比例时，缓存层代理就会更快地把脏对象刷回到后端存储池<br>有效值：Double<br>默认值：.6</p>
 <h3 id="添加配置cache-tier"><a href="#添加配置cache-tier" class="headerlink" title="添加配置cache tier"></a>添加配置cache tier</h3><p>缓存池：<br>创建缓存池的方式和标准存储池一样，区别在于缓存层使用了高性能的磁盘并且有自己的规则集。</p>
 <p>后端存储池可以为：<br>Standard Storage（标准存储）: 这情景下，存储池中会复制一个对象的多个副本。<br>Erasure Coding（纠删编码）: 这种情景下，存储池会使用纠删编码来保证数据的有效性，会牺牲一部分性能。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># 创建一个缓存层</span><br><span class="line">ceph osd tier add &#123;storagepool&#125; &#123;cachepool&#125;</span><br><span class="line"></span><br><span class="line"># 设置缓存模式</span><br><span class="line">ceph osd tier cache-mode &#123;cachepool&#125; &#123;cache-mode&#125;</span><br><span class="line"></span><br><span class="line"># 客户端的流量从存储池重定向到缓存池</span><br><span class="line">ceph osd tier set-overlay &#123;storagepool&#125; &#123;cachepool&#125;</span><br><span class="line"></span><br><span class="line"># 配置参数</span><br><span class="line">ceph osd pool set &#123;cachepool&#125; hit_set_type bloom</span><br><span class="line">ceph osd pool set &#123;cachepool&#125; hit_set_count 1</span><br><span class="line">ceph osd pool set &#123;cachepool&#125; hit_set_period 3600</span><br><span class="line"></span><br><span class="line">ceph osd pool set &#123;cachepool&#125; target_max_bytes 1000000000000</span><br><span class="line">ceph osd pool set &#123;cachepool&#125; target_max_objects 1000000</span><br><span class="line"></span><br><span class="line">ceph osd pool set &#123;cachepool&#125; cache_target_dirty_ratio 0.4</span><br><span class="line">ceph osd pool set &#123;cachepool&#125; cache_target_dirty_high_ratio 0.6</span><br><span class="line">ceph osd pool set &#123;cachepool&#125; cache_target_full_ratio 0.8</span><br><span class="line"></span><br><span class="line">ceph osd pool set &#123;cachepool&#125; cache_min_flush_age 600</span><br><span class="line">ceph osd pool set &#123;cachepool&#125; cache_min_evict_age 1800</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line"># 创建一个缓存层</span>
+<span class="line">ceph osd tier add &#123;storagepool&#125; &#123;cachepool&#125;</span>
+<span class="line"></span>
+<span class="line"># 设置缓存模式</span>
+<span class="line">ceph osd tier cache-mode &#123;cachepool&#125; &#123;cache-mode&#125;</span>
+<span class="line"></span>
+<span class="line"># 客户端的流量从存储池重定向到缓存池</span>
+<span class="line">ceph osd tier set-overlay &#123;storagepool&#125; &#123;cachepool&#125;</span>
+<span class="line"></span>
+<span class="line"># 配置参数</span>
+<span class="line">ceph osd pool set &#123;cachepool&#125; hit_set_type bloom</span>
+<span class="line">ceph osd pool set &#123;cachepool&#125; hit_set_count 1</span>
+<span class="line">ceph osd pool set &#123;cachepool&#125; hit_set_period 3600</span>
+<span class="line"></span>
+<span class="line">ceph osd pool set &#123;cachepool&#125; target_max_bytes 1000000000000</span>
+<span class="line">ceph osd pool set &#123;cachepool&#125; target_max_objects 1000000</span>
+<span class="line"></span>
+<span class="line">ceph osd pool set &#123;cachepool&#125; cache_target_dirty_ratio 0.4</span>
+<span class="line">ceph osd pool set &#123;cachepool&#125; cache_target_dirty_high_ratio 0.6</span>
+<span class="line">ceph osd pool set &#123;cachepool&#125; cache_target_full_ratio 0.8</span>
+<span class="line"></span>
+<span class="line">ceph osd pool set &#123;cachepool&#125; cache_min_flush_age 600</span>
+<span class="line">ceph osd pool set &#123;cachepool&#125; cache_min_evict_age 1800</span>
+</code></pre></div>
 
 <h3 id="删除缓存层"><a href="#删除缓存层" class="headerlink" title="删除缓存层"></a>删除缓存层</h3><h4 id="writeback"><a href="#writeback" class="headerlink" title="writeback"></a>writeback</h4><p>因为writeback缓存层可能会有脏数据，你必须按照以下的步骤来确保你不会丢失任意在缓存中的脏对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 修改缓存模式为forward，任何新的写入对象会直接写入后端存储</span><br><span class="line">ceph osd tier cache-mode &#123;cachepool&#125; forward&#x2F;proxy</span><br><span class="line"></span><br><span class="line"># 确认缓存池中所有数据都被刷新，这通常会花费一段时间</span><br><span class="line">rados -p &#123;cachepool&#125; ls</span><br><span class="line"></span><br><span class="line"># 如果缓存池中还有对象，可以手动进行刷新</span><br><span class="line">rados -p &#123;cachepool&#125; cache-flush-evict-all</span><br><span class="line"></span><br><span class="line"># 移除重新向，客户端不会直接发送流量到缓存</span><br><span class="line">ceph osd tier remove-overlay &#123;storagetier&#125;</span><br><span class="line"></span><br><span class="line"># 最后，从后端存储移除缓存池</span><br><span class="line">ceph osd tier remove &#123;storagepool&#125; &#123;cachepool&#125;</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line"># 修改缓存模式为forward，任何新的写入对象会直接写入后端存储</span>
+<span class="line">ceph osd tier cache-mode &#123;cachepool&#125; forward&#x2F;proxy</span>
+<span class="line"></span>
+<span class="line"># 确认缓存池中所有数据都被刷新，这通常会花费一段时间</span>
+<span class="line">rados -p &#123;cachepool&#125; ls</span>
+<span class="line"></span>
+<span class="line"># 如果缓存池中还有对象，可以手动进行刷新</span>
+<span class="line">rados -p &#123;cachepool&#125; cache-flush-evict-all</span>
+<span class="line"></span>
+<span class="line"># 移除重新向，客户端不会直接发送流量到缓存</span>
+<span class="line">ceph osd tier remove-overlay &#123;storagetier&#125;</span>
+<span class="line"></span>
+<span class="line"># 最后，从后端存储移除缓存池</span>
+<span class="line">ceph osd tier remove &#123;storagepool&#125; &#123;cachepool&#125;</span>
+</code></pre></div>
 
 
 
 <h4 id="readonly"><a href="#readonly" class="headerlink" title="readonly"></a>readonly</h4><p>因为只读缓存层中不存储脏数据，可以直接禁用和移除</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 设置缓存模式为none进行禁用</span><br><span class="line">ceph osd tier cache-mode &#123;cachepool&#125; none</span><br><span class="line"></span><br><span class="line"># 移除重新向，客户端不会直接发送流量到缓存</span><br><span class="line">ceph osd tier remove-overlay &#123;storagetier&#125;</span><br><span class="line"></span><br><span class="line"># 从后端存储移除缓存层</span><br><span class="line">ceph osd tier remove &#123;storagepool&#125; &#123;cachepool&#125;</span><br></pre></td></tr></table></figure>
+<div class="code-block"><div class="code-toolbar"><span>TEXT</span><button class="copy-code" type="button">复制代码</button></div><pre><code><span class="line"># 设置缓存模式为none进行禁用</span>
+<span class="line">ceph osd tier cache-mode &#123;cachepool&#125; none</span>
+<span class="line"></span>
+<span class="line"># 移除重新向，客户端不会直接发送流量到缓存</span>
+<span class="line">ceph osd tier remove-overlay &#123;storagetier&#125;</span>
+<span class="line"></span>
+<span class="line"># 从后端存储移除缓存层</span>
+<span class="line">ceph osd tier remove &#123;storagepool&#125; &#123;cachepool&#125;</span>
+</code></pre></div>
 
 <h3 id="测试用例"><a href="#测试用例" class="headerlink" title="测试用例"></a>测试用例</h3><h4 id="测试组网环境"><a href="#测试组网环境" class="headerlink" title="测试组网环境"></a>测试组网环境</h4><p>服务器：dell X86<br>Cpu: Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz  2物理核数 24逻辑核<br>内存：128G<br>硬盘：12盘位  4T硬盘 (1个槽位用于系统盘)<br>网口：万兆网口 * 1</p>
 <p>Ceph环境：(node51 node52 node53 node54 node55)<br>Mon：node155 node156 node157<br>Mgr：node155 node156 node157<br>Mds：node155 node156 node157<br>Osd：11 SATA * 3 ， SSD * 4<br>网口：66网段</p>
@@ -150,154 +97,4 @@
 <p>4、对于缓存穿透，cache采用了布隆过滤器（用于判断存在），缓存雪崩可通过自带crush算法进行故障恢复适当规避，故障无法恢复时需进一步研究。</p>
 <p>缓存穿透是指访问某个数据时，cache中没有，且data池也没有，查询是失败，当用户多的时候，同时访问这个不存在的数据，就会给data池很大的压力。</p>
 <p>缓存雪崩指的是 缓存层出现了错误，不能正常工作了，大量的请求会往data池压，导致data池存在挂掉的情况。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://github.com/PigletZ/2020/09/11/ceph%E7%BC%93%E5%AD%98%E5%88%86%E5%B1%82/" data-id="ckhyqvvw500002knx8i0p6wdm" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/" rel="tag">ceph</a></li></ul>
-
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2020/11/26/ceph%E4%BF%AE%E6%94%B9public_network/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          ceph修改public_network
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/04/05/Kdump%E3%80%81watchdog%E3%80%81BMC%E9%85%8D%E7%BD%AE/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Kdump、watchdog、BMC配置</div>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ceph/">ceph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/interface/">interface</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ceph/" rel="tag">ceph</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/interface/" rel="tag">interface</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mon/" rel="tag">mon</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/tags/interface/" style="font-size: 10px;">interface</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/mon/" style="font-size: 10px;">mon</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2020/11/26/ceph%E4%BF%AE%E6%94%B9public_network/">ceph修改public_network</a>
-          </li>
-        
-          <li>
-            <a href="/2020/09/11/ceph%E7%BC%93%E5%AD%98%E5%88%86%E5%B1%82/">ceph缓存分层</a>
-          </li>
-        
-          <li>
-            <a href="/2020/04/05/Kdump%E3%80%81watchdog%E3%80%81BMC%E9%85%8D%E7%BD%AE/">Kdump、watchdog、BMC配置</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/17/%E5%AD%98%E5%82%A8%E7%AD%96%E7%95%A5%E9%83%A8%E7%BD%B2/">存储策略部署文档</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/12/%E6%96%87%E4%BB%B6%E6%9F%A5%E8%AF%A2API%E6%8E%A5%E5%8F%A3/">对象文件查询接口</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2020 JH Zeng<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-  </div>
-</body>
-</html>
+<div class="article-end"><span>— END OF NOTE —</span><a href="/archives/">返回文章归档 ↗</a></div><a class="next-post" href="/2020/04/05/Kdump%E3%80%81watchdog%E3%80%81BMC%E9%85%8D%E7%BD%AE/"><span class="eyebrow">继续阅读</span><strong>Kdump、watchdog、BMC配置</strong><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a></article><aside class="toc"><div class="eyebrow">本篇目录</div><nav aria-label="文章目录"><a class="toc-level-2" href="#缓存分类">缓存分类</a><a class="toc-level-3" href="#writeback（热数据）">writeback（热数据）</a><a class="toc-level-3" href="#forward">forward</a><a class="toc-level-3" href="#readonly（冷数据）">readonly（冷数据）</a><a class="toc-level-3" href="#readforward">readforward</a><a class="toc-level-3" href="#proxy">proxy</a><a class="toc-level-3" href="#readproxy">readproxy</a><a class="toc-level-2" href="#部署搭建（主要为writeback、readonly）">部署搭建（主要为writeback、readonly）</a><a class="toc-level-3" href="#参数说明">参数说明</a><a class="toc-level-3" href="#添加配置cache-tier">添加配置cache tier</a><a class="toc-level-3" href="#删除缓存层">删除缓存层</a><a class="toc-level-4" href="#writeback">writeback</a><a class="toc-level-4" href="#readonly">readonly</a><a class="toc-level-3" href="#测试用例">测试用例</a><a class="toc-level-4" href="#测试组网环境">测试组网环境</a><a class="toc-level-4" href="#no-cache-tier">no cache tier</a><a class="toc-level-4" href="#writeback-1">writeback</a><a class="toc-level-4" href="#readonly-1">readonly</a><a class="toc-level-3" href="#测试结论">测试结论</a></nav><a class="toc-top" href="#main">↑ 回到顶部</a></aside></div></main><footer class="site-footer shell"><div><a href="/">Cepher Piglet</a><span>记录，理解，再向前一步。</span></div><div><span>© 2020–2026 JH Zeng</span><a href="/atom.xml">RSS ↗</a><a href="https://github.com/PigletZ" rel="noopener">GitHub ↗</a></div></footer></body></html>
